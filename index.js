@@ -6,7 +6,6 @@ const ObjectId = require('mongodb').ObjectId;
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rhp8f.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-console.log(process.env.DB_PASS);
 const app = express()
 
 app.use(bodyParser.json());
@@ -83,7 +82,7 @@ client.connect(err => {
       })
 
       app.delete('/delete/:id',(req, res)=>{
-        fruitsCollection.deleteOne({_id: ObjectId (req.params.id)})
+        productCollection.deleteOne({_id: ObjectId (req.params.id)})
         .then((result)=>{
             res.send(result.deletedCount > 0);
         })
