@@ -16,7 +16,7 @@ app.use(cors());
 
 const port = 5500
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     res.send('Hello from db its working fine')
 })
 
@@ -25,71 +25,71 @@ app.get('/', (req, res)=>{
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
     console.log('connection error', err);
-  const fruitsCollection = client.db("freshFruits").collection("fruits");
-  const ordersCollection = client.db("freshFruits").collection("orders");
+    const fruitsCollection = client.db("freshFruits").collection("fruits");
+    const ordersCollection = client.db("freshFruits").collection("orders");
 
-  console.log('Database connected successfully');
+    console.log('Database connected successfully');
 
-  app.get('/products', (req, res)=>{
-    fruitsCollection.find()
-    .toArray((err, documents)=>{
-        res.send(documents);
+    app.get('/products', (req, res) => {
+        fruitsCollection.find()
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
     })
-  })
 
-    app.post('/addProduct', (req, res)=>{
+    app.post('/addProduct', (req, res) => {
         const newFruits = req.body;
         fruitsCollection.insertOne(newFruits)
-        .then(result =>{
-            res.send(result.insertedCount > 0)
-            res.redirect('/');
-        })
+            .then(result => {
+                res.send(result.insertedCount > 0)
+                res.redirect('/');
+            })
     })
 
 
-    app.post('/addOrder', (req, res)=>{
+    app.post('/addOrder', (req, res) => {
         const order = req.body;
         ordersCollection.insertOne(order)
-        .then(result =>{
-        
-            console.log(result);
-            
-            res.send(result.insertedCount > 0)
-        })
+            .then(result => {
+
+                console.log(result);
+
+                res.send(result.insertedCount > 0)
+            })
     })
 
-    app.get('/products/:id',(req, res)=>{
-        fruitsCollection.find({_id: ObjectId(req.params.id)})
-          .toArray((err, document)=>{
-              res.send(document[0]);
-          })
-      })
+    app.get('/products/:id', (req, res) => {
+        fruitsCollection.find({ _id: ObjectId(req.params.id) })
+            .toArray((err, document) => {
+                res.send(document[0]);
+            })
+    })
 
 
-      app.get('/orders',(req, res)=>{
+    app.get('/orders', (req, res) => {
         ordersCollection.find()
-          .toArray((err, document)=>{
-              res.send(document);
-              console.log(document);
-          })
-      })
-
-      app.get('/orders/:id',(req, res)=>{
-        ordersCollection.find({_id: ObjectId(req.params.id)})
-          .toArray((err, document)=>{
-              res.send(document[0]);
-          })
-      })
-
-      app.delete('/delete/:id',(req, res)=>{
-        productCollection.deleteOne({_id: ObjectId (req.params.id)})
-        .then((result)=>{
-            res.send(result.deletedCount > 0);
-        })
+            .toArray((err, document) => {
+                res.send(document);
+                console.log(document);
+            })
     })
 
-   
-  
+    app.get('/orders/:id', (req, res) => {
+        ordersCollection.find({ _id: ObjectId(req.params.id) })
+            .toArray((err, document) => {
+                res.send(document[0]);
+            })
+    })
+
+    app.delete('/delete/:id', (req, res) => {
+        productCollection.deleteOne({ _id: ObjectId(req.params.id) })
+            .then((result) => {
+                res.send(result.deletedCount > 0);
+            })
+    })
+
+
+
 });
 
 app.listen(process.env.PORT || port);
